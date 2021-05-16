@@ -1,11 +1,11 @@
 /* Elise Frigoli 
  * CSC 422 Software Engineering 
  * Professor Susan Furtney
- * 05/16/21
+ * 05/15/21
  * Week 01 - Assignment 01 Part 2
  * 
  * This is a class definition for the class Pet. The purpose of this class is to 
- * store the name and age of a pet in the pet database.*/
+ * store the name and age of a pet in the pet database. */
 
 // Establishing the class
 public class Pet {

@@ -165,7 +165,7 @@ public class PetDatabase {
 			// For each pet in the list
 			for(int i = 0; i < list.size(); i++ ) {
 				  // If the name of the pet matches the searched name
-		          if (list.get(i).getName().contains(searchName)){
+		          if (list.get(i).getName().toLowerCase().contains(searchName.toLowerCase())){
 		  			  // Adding a new pet object to the arrayList using the data entered by the user
 		  			  nameResults.add(new Pet(list.get(i).getName(), list.get(i).getAge()));
 		       
