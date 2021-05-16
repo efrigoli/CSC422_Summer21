@@ -1,12 +1,15 @@
 /* Elise Frigoli 
  * CSC 422 Software Engineering 
  * Professor Susan Furtney
- * 05/16/21
+ * 05/15/21
  * Week 01 - Assignment 01 Part 2
  * 
  * This program creates a database to store pet names and ages. It allows the user
  * to view the database, add new pets, remove existing pets, update existing pet information, 
- * and search the database for a pet by either name or age. */
+ * and search the database for a pet by either name or age. 
+ * 
+ * 05/15/21 - searchByAge() and searchByName() methods added to allow the user to search the database
+ * for pet records that match a given name or age. */
 
 // Importing all standard Java utilities.
 import java.util.*;
@@ -37,7 +40,9 @@ public class PetDatabase {
 		System.out.println("\nWhat would you like to do?");
 		System.out.println("1) View all pets");
 		System.out.println("2) Add more pets");
-		System.out.println("3) Exit program");
+		System.out.println("3) Search pets by name");
+		System.out.println("4) Search pets by age");
+		System.out.println("5) Exit program");
 		
 		// Accepting the user's menu selection
 		Scanner input = new Scanner(System.in);
@@ -52,14 +57,28 @@ public class PetDatabase {
 			case 1:
 				// Calling the showPets method
 				showPets(list);
+				displayMenu(list);
 				break;
 			// If they chose to add a new pet to the table
 			case 2:
 				// Calling the addPet method
 				addPet(list);
+				displayMenu(list);
+				break;
+			// If they chose to search for a pet by name
+			case 3:
+				// Calling the searchByName method
+				searchByName(list);
+				displayMenu(list);
+				break;
+			// If they chose to search for a pet by age
+			case 4:
+				// Calling the searchByAge method
+				searchByAge(list);
+				displayMenu(list);
 				break;
 			// If they chose to exit the program
-			case 3:
+			case 5:
 				// Print an exit message and terminate the program
 				System.out.println("Goodbye!");
 				System.exit(0);
@@ -105,9 +124,6 @@ public class PetDatabase {
 		System.out.println("+---------------------------+");
 		System.out.println(count + " rows in set.");
 		
-		// Displaying the menu to the user
-		displayMenu(list);
-		
 	}
 	
 	
@@ -128,8 +144,73 @@ public class PetDatabase {
 		// Showing the table of pet data, including the new pet information
 		showPets(list);
 		
-		// Displaying the menu to the user
-		displayMenu(list);
+	}
+	
+	/* Defining the searchByName method which requires an arrayList parameter and returns
+	 * a printed table with matching entries to the name entered by the user. */
+	public static void searchByName(ArrayList<Pet> list) {
+		
+		// Accepting user input for the pet name to search 
+		Scanner newSearch = new Scanner(System.in);
+		System.out.print("Enter a name to search: ");
+		String searchName = newSearch.nextLine();
+		
+		// If there are rows of pet data in the table
+		if (list.size() > 0) {
+			int count = 0;
+			
+			// Creating the arrayList that will store pet information
+			ArrayList <Pet> nameResults = new ArrayList<Pet>();
+			
+			// For each pet in the list
+			for(int i = 0; i < list.size(); i++ ) {
+				  // If the name of the pet matches the searched name
+		          if (list.get(i).getName().contains(searchName)){
+		  			  // Adding a new pet object to the arrayList using the data entered by the user
+		  			  nameResults.add(new Pet(list.get(i).getName(), list.get(i).getAge()));
+		       
+		          }
+		       }
+			// Print out the table of matching results
+			showPets(nameResults);
+			// If there are no rows of pet data in the table
+			} else {
+				// Inform user that there are no rows to display
+				System.out.printf("%-2s%-26s%-2s\n","|", "No pets to display.", "|");
+			}
+
+	}
+	
+	/* Defining the searchByAge method which requires an arrayList parameter and returns
+	 * a printed table with matching entries to the age entered by the user. */
+	public static void searchByAge(ArrayList<Pet> list) {
+		
+		// Accepting user input for the pet age to search 
+		Scanner newSearch = new Scanner(System.in);
+		System.out.print("Enter age to search: ");
+		int searchAge = newSearch.nextInt();
+      
+		// If there are rows of pet data in the table
+		if (list.size() > 0) {
+			
+			// Creating the arrayList that will store pet information
+			ArrayList <Pet> ageResults = new ArrayList<Pet>();
+			
+			// For each pet in the list
+			for(int i = 0; i < list.size(); i++ ) {
+				 // If the age of the pet matches the searched age
+		          if (list.get(i).getAge() == searchAge){
+		  			  // Adding a new pet object to the arrayList using the data entered by the user
+		  			  ageResults.add(new Pet(list.get(i).getName(), list.get(i).getAge()));
+		          }
+		       }
+			// Print out the table of matching results
+			showPets(ageResults);
+			// If there are no rows of pet data in the table
+			} else {
+				// Inform user that there are no rows to display
+				System.out.printf("%-2s%-26s%-2s\n","|", "No pets to display.", "|");
+			}
 		
 	}
 
