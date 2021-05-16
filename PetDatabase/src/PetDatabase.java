@@ -9,7 +9,10 @@
  * and search the database for a pet by either name or age. 
  * 
  * 05/15/21 - searchByAge() and searchByName() methods added to allow the user to search the database
- * for pet records that match a given name or age. */
+ * for pet records that match a given name or age. 
+ *  
+ * 05/16/21 - updatePet() and removePet() methods added to allow the user to update a pet record
+ * or delete a pet record from the database. */
 
 // Importing all standard Java utilities.
 import java.util.*;
@@ -33,6 +36,7 @@ public class PetDatabase {
 	
 	}
 	
+	
 	/* Defining the displayMenu method which requires an arrayList parameter and prints a menu of options for the user. 
 	 * Methods to use on the arrayList are called based on the user selection. */
 	public static void displayMenu(ArrayList list) {
@@ -40,9 +44,11 @@ public class PetDatabase {
 		System.out.println("\nWhat would you like to do?");
 		System.out.println("1) View all pets");
 		System.out.println("2) Add more pets");
-		System.out.println("3) Search pets by name");
-		System.out.println("4) Search pets by age");
-		System.out.println("5) Exit program");
+		System.out.println("3) Update an existing pet");
+		System.out.println("4) Remove an existing pet");
+		System.out.println("5) Search pets by name");
+		System.out.println("6) Search pets by age");
+		System.out.println("7) Exit program");
 		
 		// Accepting the user's menu selection
 		Scanner input = new Scanner(System.in);
@@ -65,20 +71,32 @@ public class PetDatabase {
 				addPet(list);
 				displayMenu(list);
 				break;
-			// If they chose to search for a pet by name
+			// If they chose to update an existing pet
 			case 3:
+				// Calling the updatePet method
+				updatePet(list);
+				displayMenu(list);
+				break;
+			// If they chose to delete an existing pet
+			case 4:
+				// Calling the deletePet method
+				deletePet(list);
+				displayMenu(list);
+				break;
+			// If they chose to search for a pet by name
+			case 5:
 				// Calling the searchByName method
 				searchByName(list);
 				displayMenu(list);
 				break;
 			// If they chose to search for a pet by age
-			case 4:
+			case 6:
 				// Calling the searchByAge method
 				searchByAge(list);
 				displayMenu(list);
 				break;
 			// If they chose to exit the program
-			case 5:
+			case 7:
 				// Print an exit message and terminate the program
 				System.out.println("Goodbye!");
 				System.exit(0);
@@ -90,6 +108,7 @@ public class PetDatabase {
 				displayMenu(list);
 		}
 	}
+	
 	
 	/* Defining the showPets method which requires an arrayList parameter and prints a table
 	 * populated by the current arrayList of pet information. */
@@ -146,6 +165,81 @@ public class PetDatabase {
 		
 	}
 	
+	
+	/* Defining the updatePet method which requires an arrayList parameter and prompts the user for 
+	 * an index value. User is then prompted for a name and age to update the selected pet record. */
+	public static void updatePet(ArrayList<Pet> list) {
+		
+		// If there are pets in the database
+		if (list.size() > 0) {
+			// Displaying the current list so the user can see the options
+			showPets(list);
+
+			Scanner updates = new Scanner(System.in);
+			// Accepting user input for which pet to update
+			System.out.print("Enter the pet ID to update: ");
+			int updateID = updates.nextInt();
+			
+			// If the pet ID is within the bounds of the arrayList
+			if (updateID < list.size()) {
+				// Prompting for new name and age information
+				updates.nextLine();
+				System.out.print("Enter a new name: ");
+				String newName = updates.nextLine();
+				System.out.print("Enter a new age: ");
+				int newAge = updates.nextInt();
+				
+				// Informing the user that the information is changed
+				System.out.println(list.get(updateID).getName() + " " + list.get(updateID).getAge() + " changed to " + newName + " " + newAge + ".");
+				
+				// Using the set methods for the Pet object to update the name and age
+				list.get(updateID).setName(newName);
+				list.get(updateID).setAge(newAge);
+			} else {
+				// If the pet ID chosen is not within the bounds of the arrayList, inform the user
+				System.out.println("No matching pet ID found.");
+			}	
+		} else {
+			// If there are no pet records in the database
+			System.out.println("No pet records to update.");
+		}
+		
+	}
+	
+	
+	/* Defining the deletePet method which requires an arrayList parameter and prompts the user for 
+	 * an index value. The selected pet record is then deleted from the table. */
+	public static void deletePet(ArrayList<Pet> list) {
+		
+		// If there are pets in the database
+		if (list.size() > 0) {
+			// Displaying the current list so the user can see the options
+			showPets(list);
+		
+			Scanner removePet = new Scanner(System.in);
+			// Accepting user input for which pet to remove
+			System.out.print("Enter the pet ID to remove: ");
+			int removeID = removePet.nextInt();
+			
+			// If the pet ID is within the bounds of the arrayList
+			if (removeID < list.size()) {
+				// Inform the user which pet has been removed
+				System.out.println(list.get(removeID).getName() + " is removed.");
+				
+				// Remove the pet from the list
+				list.remove(removeID);
+			} else {
+				// If the pet ID chosen is not within the bounds of the arrayList, inform the user
+				System.out.println("No matching pet ID found.");
+			}
+			
+		} else {
+			// If there are no pet records in the database
+			System.out.println("No pet records to remove.");
+		}
+	}
+	
+	
 	/* Defining the searchByName method which requires an arrayList parameter and returns
 	 * a printed table with matching entries to the name entered by the user. */
 	public static void searchByName(ArrayList<Pet> list) {
@@ -180,6 +274,7 @@ public class PetDatabase {
 			}
 
 	}
+	
 	
 	/* Defining the searchByAge method which requires an arrayList parameter and returns
 	 * a printed table with matching entries to the age entered by the user. */
