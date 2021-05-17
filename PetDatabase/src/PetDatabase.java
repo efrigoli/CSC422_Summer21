@@ -15,8 +15,11 @@
  * or delete a pet record from the database.
  * 
  * 05/17/21 - searchByAge() and searchByName() and updatePet() methods hidden from the menu so 
- * that users can no longer access them. Refactored addPet() to loop through the addition process until the 
- * user enters the word 'done'. Limiting addPet() to only add up to 5 pets total to the database. */
+ * that users can no longer access them. 
+ * Refactored addPet() to loop through the addition process until the user enters the word 'done'. 
+ * Limiting addPet() to only add up to 5 pets total to the database. 
+ * Requiring the user to enter only two tokens when adding a new pet: the name and the age.
+ * Limiting the age of new pets to a value between 1-20 years. */
 
 // Importing all standard Java utilities.
 import java.util.*;
@@ -171,10 +174,16 @@ public class PetDatabase {
 							// Parsing the pet age String into an int value
 							int petAge = Integer.parseInt(petAgeString);
 							
-							// Adding a new pet object to the arrayList using the data entered by the user
-							list.add(new Pet(petName, petAge));
-							// Increment the count of pets added at this time
-							addedPetCount++;
+							// If an invalid age is entered
+							if (petAge < 1 || petAge > 20) {
+								// Inform the user of the error
+								System.out.println(petAge + " is not a valid age.");
+							} else { // If the age entered is between 1-20 years old
+								// Adding a new pet object to the arrayList using the data entered by the user
+								list.add(new Pet(petName, petAge));
+								// Increment the count of pets added at this time
+								addedPetCount++;
+							}
 					    }
 						
 					} else { // If there are already 5 entries in the database
