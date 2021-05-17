@@ -132,19 +132,35 @@ public class PetDatabase {
 	 * in the table with data based on user input. */
 	public static void addPet(ArrayList<Pet> list) {
 		
-		// Accepting user input for the pet name and age
-		Scanner newPet = new Scanner(System.in);
-		System.out.print("Enter the name of the new pet: ");
-		String newPetName = newPet.nextLine();
-		System.out.print("Enter the age of the new pet: ");
-		int newPetAge = newPet.nextInt();
+		// Adding an empty String to contain new pet data
+		String newPetInfo = "";
+		// Setting a control var for the do/while loop
+		Boolean addingPets = true;
+		int addedPetCount = 0;
 		
-		// Adding a new pet object to the arrayList using the data entered by the user
-		list.add(new Pet(newPetName, newPetAge));
-		
-		// Showing the table of pet data, including the new pet information
-		showPets(list);
-		
+		do {
+			// Accepting user input for the pet name and age
+			Scanner newPet = new Scanner(System.in);
+			System.out.print("Enter the name of the new pet: ");
+			newPetInfo = newPet.nextLine();
+			// If the user does not enter the word 'done' 
+			if (!(newPetInfo.matches("done"))) {
+				// Prompt for age information
+				System.out.print("Enter the age of the new pet: ");
+				int newPetAge = newPet.nextInt();
+				
+				// Adding a new pet object to the arrayList using the data entered by the user
+				list.add(new Pet(newPetInfo, newPetAge));
+				// Increment the count of pets added at this time
+				addedPetCount++;
+			} else { // If the user enters the word 'done'
+				// Change the control var to exit the loop
+				addingPets = false;
+			}
+		} while (addingPets == true);
+
+		// Inform the user how many pets were added at this time
+		System.out.println(addedPetCount + " pets added.");
 	}
 	
 	
