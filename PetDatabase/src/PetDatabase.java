@@ -156,17 +156,27 @@ public class PetDatabase {
 		
 						// Splitting the input string into tokens delimited by whitespace
 						StringTokenizer petInfoTokenizer = new StringTokenizer(newPetInfo," ");
-						// Storing the first token as the pet name
-						String petName = petInfoTokenizer.nextToken();
-						// Storing the next token as the pet age
-						String petAgeString = petInfoTokenizer.nextToken();
-						// Parsing the pet age String into an int value
-						int petAge = Integer.parseInt(petAgeString);
+						// Count the number of tokens entered by the user
+					    int tokenCount = petInfoTokenizer.countTokens();
+					    
+					    // If the user enters anything except a single name and a single age
+					    if (tokenCount != 2) {
+					    	// Inform them of the error and loop for another pet
+					    	System.out.println(newPetInfo + " is not a valid input.");
+					    } else { // If the user enters a single name and a single age
+					    	// Storing the first token as the pet name
+							String petName = petInfoTokenizer.nextToken();
+							// Storing the next token as the pet age
+							String petAgeString = petInfoTokenizer.nextToken();
+							// Parsing the pet age String into an int value
+							int petAge = Integer.parseInt(petAgeString);
+							
+							// Adding a new pet object to the arrayList using the data entered by the user
+							list.add(new Pet(petName, petAge));
+							// Increment the count of pets added at this time
+							addedPetCount++;
+					    }
 						
-						// Adding a new pet object to the arrayList using the data entered by the user
-						list.add(new Pet(petName, petAge));
-						// Increment the count of pets added at this time
-						addedPetCount++;
 					} else { // If there are already 5 entries in the database
 						System.out.println("Error: Database is full.");
 						// Exit the addPet loop
