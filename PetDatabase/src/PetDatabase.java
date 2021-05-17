@@ -12,7 +12,10 @@
  * for pet records that match a given name or age. 
  *  
  * 05/16/21 - updatePet() and removePet() methods added to allow the user to update a pet record
- * or delete a pet record from the database. */
+ * or delete a pet record from the database.
+ * 
+ * 05/17/21 - searchByAge() and searchByName() and updatePet() methods hidden from the menu so 
+ * that users can no longer access them. */
 
 // Importing all standard Java utilities.
 import java.util.*;
@@ -44,11 +47,8 @@ public class PetDatabase {
 		System.out.println("\nWhat would you like to do?");
 		System.out.println("1) View all pets");
 		System.out.println("2) Add more pets");
-		System.out.println("3) Update an existing pet");
-		System.out.println("4) Remove an existing pet");
-		System.out.println("5) Search pets by name");
-		System.out.println("6) Search pets by age");
-		System.out.println("7) Exit program");
+		System.out.println("3) Remove an existing pet");
+		System.out.println("4) Exit program");
 		
 		// Accepting the user's menu selection
 		Scanner input = new Scanner(System.in);
@@ -71,32 +71,14 @@ public class PetDatabase {
 				addPet(list);
 				displayMenu(list);
 				break;
-			// If they chose to update an existing pet
-			case 3:
-				// Calling the updatePet method
-				updatePet(list);
-				displayMenu(list);
-				break;
 			// If they chose to delete an existing pet
-			case 4:
+			case 3:
 				// Calling the deletePet method
 				deletePet(list);
 				displayMenu(list);
 				break;
-			// If they chose to search for a pet by name
-			case 5:
-				// Calling the searchByName method
-				searchByName(list);
-				displayMenu(list);
-				break;
-			// If they chose to search for a pet by age
-			case 6:
-				// Calling the searchByAge method
-				searchByAge(list);
-				displayMenu(list);
-				break;
 			// If they chose to exit the program
-			case 7:
+			case 4:
 				// Print an exit message and terminate the program
 				System.out.println("Goodbye!");
 				System.exit(0);
