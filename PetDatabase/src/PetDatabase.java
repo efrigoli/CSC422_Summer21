@@ -15,7 +15,8 @@
  * or delete a pet record from the database.
  * 
  * 05/17/21 - searchByAge() and searchByName() and updatePet() methods hidden from the menu so 
- * that users can no longer access them. */
+ * that users can no longer access them. Refactored addPet() to loop through the addition process until the 
+ * user enters the word 'done'. Limiting addPet() to only add up to 5 pets total to the database. */
 
 // Importing all standard Java utilities.
 import java.util.*;
@@ -132,36 +133,47 @@ public class PetDatabase {
 	 * in the table with data based on user input. */
 	public static void addPet(ArrayList<Pet> list) {
 		
-		// Adding an empty String to contain new pet data
-		String newPetInfo = "";
-		// Setting a control var for the do/while loop
-		Boolean addingPets = true;
-		int addedPetCount = 0;
-		
-		do {
-			// Accepting user input for the pet name and age
-			Scanner newPet = new Scanner(System.in);
-			System.out.print("Enter the name of the new pet: ");
-			newPetInfo = newPet.nextLine();
-			// If the user does not enter the word 'done' 
-			if (!(newPetInfo.matches("done"))) {
-				// Prompt for age information
-				System.out.print("Enter the age of the new pet: ");
-				int newPetAge = newPet.nextInt();
-				
-				// Adding a new pet object to the arrayList using the data entered by the user
-				list.add(new Pet(newPetInfo, newPetAge));
-				// Increment the count of pets added at this time
-				addedPetCount++;
-			} else { // If the user enters the word 'done'
-				// Change the control var to exit the loop
-				addingPets = false;
-			}
-		} while (addingPets == true);
+	
+			// Adding an empty String to contain new pet data
+			String newPetInfo = "";
+			// Setting a control var for the do/while loop
+			Boolean addingPets = true;
+			// Counting the number of pets added at this time
+			int addedPetCount = 0;
+			
+			do {
+				// Accepting user input for the pet name and age
+				Scanner newPet = new Scanner(System.in);
+				System.out.print("Enter the name of the new pet: ");
+				newPetInfo = newPet.nextLine();
+				// If the user does not enter the word 'done' 
+				if (!(newPetInfo.matches("done"))) {
+					// If there are fewer than 5 entries in the database
+					if (list.size() < 5) {
+						// Prompt for age information
+						System.out.print("Enter the age of the new pet: ");
+						int newPetAge = newPet.nextInt();
+						
+						// Adding a new pet object to the arrayList using the data entered by the user
+						list.add(new Pet(newPetInfo, newPetAge));
+						// Increment the count of pets added at this time
+						addedPetCount++;
+					} else { // If there are already 5 entries in the database
+						System.out.println("Error: Database is full.");
+						// Exit the addPet loop
+						break;
+					}
+				} else { // If the user enters the word 'done'
+					// Change the control var to exit the loop
+					addingPets = false;
+				}
+			} while (addingPets == true);
 
-		// Inform the user how many pets were added at this time
-		System.out.println(addedPetCount + " pets added.");
-	}
+			// Inform the user how many pets were added at this time
+			System.out.println(addedPetCount + " pets added.");
+		}
+		
+		
 	
 	
 	/* Defining the updatePet method which requires an arrayList parameter and prompts the user for 
