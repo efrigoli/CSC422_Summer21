@@ -142,20 +142,29 @@ public class PetDatabase {
 			int addedPetCount = 0;
 			
 			do {
+				
+				
 				// Accepting user input for the pet name and age
 				Scanner newPet = new Scanner(System.in);
-				System.out.print("Enter the name of the new pet: ");
+				System.out.print("Add pet (name, age): ");
 				newPetInfo = newPet.nextLine();
+				
 				// If the user does not enter the word 'done' 
 				if (!(newPetInfo.matches("done"))) {
 					// If there are fewer than 5 entries in the database
 					if (list.size() < 5) {
-						// Prompt for age information
-						System.out.print("Enter the age of the new pet: ");
-						int newPetAge = newPet.nextInt();
+		
+						// Splitting the input string into tokens delimited by whitespace
+						StringTokenizer petInfoTokenizer = new StringTokenizer(newPetInfo," ");
+						// Storing the first token as the pet name
+						String petName = petInfoTokenizer.nextToken();
+						// Storing the next token as the pet age
+						String petAgeString = petInfoTokenizer.nextToken();
+						// Parsing the pet age String into an int value
+						int petAge = Integer.parseInt(petAgeString);
 						
 						// Adding a new pet object to the arrayList using the data entered by the user
-						list.add(new Pet(newPetInfo, newPetAge));
+						list.add(new Pet(petName, petAge));
 						// Increment the count of pets added at this time
 						addedPetCount++;
 					} else { // If there are already 5 entries in the database
