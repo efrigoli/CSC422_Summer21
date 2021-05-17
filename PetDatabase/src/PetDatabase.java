@@ -260,7 +260,7 @@ public class PetDatabase {
 			int removeID = removePet.nextInt();
 			
 			// If the pet ID is within the bounds of the arrayList
-			if (removeID < list.size()) {
+			if (removeID > -1 && removeID < list.size()) {
 				// Inform the user which pet has been removed
 				System.out.println(list.get(removeID).getName() + " is removed.");
 				
@@ -268,7 +268,7 @@ public class PetDatabase {
 				list.remove(removeID);
 			} else {
 				// If the pet ID chosen is not within the bounds of the arrayList, inform the user
-				System.out.println("No matching pet ID found.");
+				System.out.println("Error: ID " + removeID + " does not exist.");
 			}
 			
 		} else {
