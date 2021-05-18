@@ -19,9 +19,17 @@
  * Refactored addPet() to loop through the addition process until the user enters the word 'done'. 
  * Limiting addPet() to only add up to 5 pets total to the database. 
  * Requiring the user to enter only two tokens when adding a new pet: the name and the age.
- * Limiting the age of new pets to a value between 1-20 years. */
+ * Limiting the age of new pets to a value between 1-20 years. 
+ * Limiting the ID input for deletePet() to only values of array indexes. 
+ * 
+ * Created the loadFile() method which loads data from a text file line-by-line, parsing the name and age values
+ * and using the values to create an ArrayList of pet objects. */
 
 // Importing all standard Java utilities.
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 //Establishing the class.
@@ -35,12 +43,75 @@ public class PetDatabase {
 		// Printing the output
 		System.out.println("Pet database program.");
 		
-		// Creating the arrayList that will store pet information
-		ArrayList <Pet> petList = new ArrayList<Pet>();
+		// Creating the arrayList that will store pet information, loading the data from a text file
+		 ArrayList <Pet> petList = loadFile("petDatabase.txt");
 		
 		// Displaying the user selection menu
 		displayMenu(petList);
 	
+	}
+	
+	
+	/* Defining the loadFile method, which accepts a String parameter and returns an ArrayList. This method
+	 * reads the contents of the file whose name is passed as the parameter, and loads each line of the file 
+	 * into an element of an ArrayList. */
+	public static ArrayList loadFile(String fileName) {
+		// Creating the buffered reader to read the file contents
+		BufferedReader fileReader = null;
+		
+		//  Try/catch statement to read the file
+		try {
+			fileReader = new BufferedReader(new FileReader(fileName));
+		} catch (FileNotFoundException e) { // If no file with the given filename is found
+			System.out.println("No file found matching that file name.");
+			e.printStackTrace();
+		} 
+		
+		// Creating an arrayList to hold the pet objects loaded from the file
+		ArrayList<Pet> petList = new ArrayList<Pet>();
+		// Creating an empty String to contain the contents of each line of the file
+		String line = null;
+		// Try/catch statement to read the first line of the file and store it as a String var
+		try {
+			line = fileReader.readLine();
+		} catch (IOException e) { // If there is an error with the input
+			System.out.println("File could not be read.");
+			e.printStackTrace();
+		} 
+		
+		// For each line of the file that has text
+		while (line != null) { 
+			// Splitting the input string into tokens delimited by whitespace
+			StringTokenizer loadedInfoTokenizer = new StringTokenizer(line," ");
+	    	// Storing the first token as the pet name
+			String loadedPetName = loadedInfoTokenizer.nextToken();
+			// Storing the next token as the pet age
+			String loadedPetAgeString = loadedInfoTokenizer.nextToken();
+			// Parsing the pet age String into an int value
+			int loadedPetAge = Integer.parseInt(loadedPetAgeString);
+			
+			// Adding a new pet object to the arrayList using the data entered by the user
+			petList.add(new Pet(loadedPetName, loadedPetAge));
+			
+			// Try/catch statement to read the remaining lines of the file and store them as a String var
+			try {
+				line = fileReader.readLine();
+			} catch (IOException e) { // If there is an error with the input
+				System.out.println("File could not be read.");
+				e.printStackTrace();
+			} 
+		} 
+		
+		// Try/catch statement to close the buffered reader
+		try {
+			fileReader.close();
+		} catch (IOException e) { // If there is an error closing the buffered reader
+			System.out.println("File reader could not been closed.");
+			e.printStackTrace();
+		}
+		
+		// Return the arrayList of pet objects
+		return petList;
 	}
 	
 	
@@ -144,9 +215,8 @@ public class PetDatabase {
 			// Counting the number of pets added at this time
 			int addedPetCount = 0;
 			
+			// Do/while loop to add new pet info until the user types 'done' or the maximum number of pets are in the database
 			do {
-				
-				
 				// Accepting user input for the pet name and age
 				Scanner newPet = new Scanner(System.in);
 				System.out.print("Add pet (name, age): ");
@@ -260,7 +330,7 @@ public class PetDatabase {
 			int removeID = removePet.nextInt();
 			
 			// If the pet ID is within the bounds of the arrayList
-			if (removeID < list.size()) {
+			if (removeID > -1 && removeID < list.size()) {
 				// Inform the user which pet has been removed
 				System.out.println(list.get(removeID).getName() + " is removed.");
 				
@@ -268,7 +338,7 @@ public class PetDatabase {
 				list.remove(removeID);
 			} else {
 				// If the pet ID chosen is not within the bounds of the arrayList, inform the user
-				System.out.println("No matching pet ID found.");
+				System.out.println("Error: ID " + removeID + " does not exist.");
 			}
 			
 		} else {
