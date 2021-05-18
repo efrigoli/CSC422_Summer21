@@ -23,13 +23,14 @@
  * Limiting the ID input for deletePet() to only values of array indexes. 
  * 
  * Created the loadFile() method which loads data from a text file line-by-line, parsing the name and age values
- * and using the values to create an ArrayList of pet objects. */
+ * and using the values to create an ArrayList of pet objects. 
+ * 
+ * Created the saveFile() method which saves the pet data in the table to a text file of pet names and ages 
+ * separated by whitespace. This method is called when the user chooses to exit the program, and the 
+ * loadFile() method loads the saved data from the text file upon the next run of the program. */
 
 // Importing all standard Java utilities.
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 //Establishing the class.
@@ -38,7 +39,6 @@ public class PetDatabase {
 	
 	// Establishing the main method.
 	public static void main(String[] args) {
-		
 		
 		// Printing the output
 		System.out.println("Pet database program.");
@@ -49,69 +49,6 @@ public class PetDatabase {
 		// Displaying the user selection menu
 		displayMenu(petList);
 	
-	}
-	
-	
-	/* Defining the loadFile method, which accepts a String parameter and returns an ArrayList. This method
-	 * reads the contents of the file whose name is passed as the parameter, and loads each line of the file 
-	 * into an element of an ArrayList. */
-	public static ArrayList loadFile(String fileName) {
-		// Creating the buffered reader to read the file contents
-		BufferedReader fileReader = null;
-		
-		//  Try/catch statement to read the file
-		try {
-			fileReader = new BufferedReader(new FileReader(fileName));
-		} catch (FileNotFoundException e) { // If no file with the given filename is found
-			System.out.println("No file found matching that file name.");
-			e.printStackTrace();
-		} 
-		
-		// Creating an arrayList to hold the pet objects loaded from the file
-		ArrayList<Pet> petList = new ArrayList<Pet>();
-		// Creating an empty String to contain the contents of each line of the file
-		String line = null;
-		// Try/catch statement to read the first line of the file and store it as a String var
-		try {
-			line = fileReader.readLine();
-		} catch (IOException e) { // If there is an error with the input
-			System.out.println("File could not be read.");
-			e.printStackTrace();
-		} 
-		
-		// For each line of the file that has text
-		while (line != null) { 
-			// Splitting the input string into tokens delimited by whitespace
-			StringTokenizer loadedInfoTokenizer = new StringTokenizer(line," ");
-	    	// Storing the first token as the pet name
-			String loadedPetName = loadedInfoTokenizer.nextToken();
-			// Storing the next token as the pet age
-			String loadedPetAgeString = loadedInfoTokenizer.nextToken();
-			// Parsing the pet age String into an int value
-			int loadedPetAge = Integer.parseInt(loadedPetAgeString);
-			
-			// Adding a new pet object to the arrayList using the data entered by the user
-			petList.add(new Pet(loadedPetName, loadedPetAge));
-			
-			// Try/catch statement to read the remaining lines of the file and store them as a String var
-			try {
-				line = fileReader.readLine();
-			} catch (IOException e) { // If there is an error with the input
-				System.out.println("File could not be read.");
-				e.printStackTrace();
-			} 
-		} 
-		
-		// Try/catch statement to close the buffered reader
-		try {
-			fileReader.close();
-		} catch (IOException e) { // If there is an error closing the buffered reader
-			System.out.println("File reader could not been closed.");
-			e.printStackTrace();
-		}
-		
-		// Return the arrayList of pet objects
-		return petList;
 	}
 	
 	
@@ -154,7 +91,14 @@ public class PetDatabase {
 				break;
 			// If they chose to exit the program
 			case 4:
-				// Print an exit message and terminate the program
+				// Try/catch statement to save the contents of the arrayList to the data file
+				try {
+					saveFile("petDatabase.txt", list);
+				} catch (FileNotFoundException e) { // If an error occurs during the save process
+					System.out.println("There was an error saving the database file.");
+					e.printStackTrace();
+				}
+				// Print a goodbye message to the user and exit the program
 				System.out.println("Goodbye!");
 				System.exit(0);
 			// If they chose anything not on the selection menu
@@ -184,9 +128,9 @@ public class PetDatabase {
 		// If there are rows of pet data in the table
 		if (list.size() > 0) {
 			// For each pet in the list
-			for(int i = 0; i < list.size(); i++ ) {
+			for (Pet pet : list) {
 				// Print a formatted row in the table containing their index, name, and age
-				System.out.printf("%-2s%3s%-2s%-15s%-2s%4s%-2s\n","|", i, "|", list.get(i).getName(), "|", list.get(i).getAge(), "|");
+				System.out.printf("%-2s%3s%-2s%-15s%-2s%4s%-2s\n","|", list.indexOf(pet), "|", pet.getName(), "|", pet.getAge(), "|");
 		  		// Increase the row counter
 				count++;
 		       }
@@ -365,11 +309,11 @@ public class PetDatabase {
 			ArrayList <Pet> nameResults = new ArrayList<Pet>();
 			
 			// For each pet in the list
-			for(int i = 0; i < list.size(); i++ ) {
+			for (Pet pet : list) {
 				  // If the name of the pet matches the searched name
-		          if (list.get(i).getName().toLowerCase().contains(searchName.toLowerCase())){
+		          if (pet.getName().toLowerCase().contains(searchName.toLowerCase())){
 		  			  // Adding a new pet object to the arrayList using the data entered by the user
-		  			  nameResults.add(new Pet(list.get(i).getName(), list.get(i).getAge()));
+		  			  nameResults.add(new Pet(pet.getName(), pet.getAge()));
 		       
 		          }
 		       }
@@ -400,11 +344,11 @@ public class PetDatabase {
 			ArrayList <Pet> ageResults = new ArrayList<Pet>();
 			
 			// For each pet in the list
-			for(int i = 0; i < list.size(); i++ ) {
+			for (Pet pet : list) {
 				 // If the age of the pet matches the searched age
-		          if (list.get(i).getAge() == searchAge){
+		          if (pet.getAge() == searchAge){
 		  			  // Adding a new pet object to the arrayList using the data entered by the user
-		  			  ageResults.add(new Pet(list.get(i).getName(), list.get(i).getAge()));
+		  			  ageResults.add(new Pet(pet.getName(), pet.getAge()));
 		          }
 		       }
 			// Print out the table of matching results
@@ -415,6 +359,84 @@ public class PetDatabase {
 				System.out.printf("%-2s%-26s%-2s\n","|", "No pets to display.", "|");
 			}
 		
+	}
+	
+	
+	/* Defining the loadFile method, which accepts a String parameter and returns an ArrayList. This method
+	 * reads the contents of the file whose name is passed as the parameter, and loads each line of the file 
+	 * into an element of an ArrayList. */
+	public static ArrayList loadFile(String fileName) {
+		// Creating the buffered reader to read the file contents
+		BufferedReader fileReader = null;
+		
+		//  Try/catch statement to read the file
+		try {
+			fileReader = new BufferedReader(new FileReader(fileName));
+		} catch (FileNotFoundException e) { // If no file with the given filename is found
+			System.out.println("No file found matching that file name.");
+			e.printStackTrace();
+		} 
+		
+		// Creating an arrayList to hold the pet objects loaded from the file
+		ArrayList<Pet> petList = new ArrayList<Pet>();
+		// Creating an empty String to contain the contents of each line of the file
+		String line = null;
+		// Try/catch statement to read the first line of the file and store it as a String var
+		try {
+			line = fileReader.readLine();
+		} catch (IOException e) { // If there is an error with the input
+			System.out.println("File could not be read.");
+			e.printStackTrace();
+		} 
+		
+		// For each line of the file that has text
+		while (line != null) { 
+			// Splitting the input string into tokens delimited by whitespace
+			StringTokenizer loadedInfoTokenizer = new StringTokenizer(line," ");
+	    	// Storing the first token as the pet name
+			String loadedPetName = loadedInfoTokenizer.nextToken();
+			// Storing the next token as the pet age
+			String loadedPetAgeString = loadedInfoTokenizer.nextToken();
+			// Parsing the pet age String into an int value
+			int loadedPetAge = Integer.parseInt(loadedPetAgeString);
+			
+			// Adding a new pet object to the arrayList using the data entered by the user
+			petList.add(new Pet(loadedPetName, loadedPetAge));
+			
+			// Try/catch statement to read the remaining lines of the file and store them as a String var
+			try {
+				line = fileReader.readLine();
+			} catch (IOException e) { // If there is an error with the input
+				System.out.println("File could not be read.");
+				e.printStackTrace();
+			} 
+		} 
+		
+		// Try/catch statement to close the buffered reader
+		try {
+			fileReader.close();
+		} catch (IOException e) { // If there is an error closing the buffered reader
+			System.out.println("File reader could not been closed.");
+			e.printStackTrace();
+		}
+		
+		// Return the arrayList of pet objects
+		return petList;
+	}
+	
+	
+	/* Defining the saveFile method, which accepts a String parameter and an ArrayList. This method
+	 * writes the contents of the ArrayList to the file at the provided filename. */
+	public static void saveFile(String fileName, ArrayList<Pet> list) throws FileNotFoundException {
+		// Creating the printWriter to write the file output to the provided filename
+	    PrintWriter fileWriter = new PrintWriter(new FileOutputStream(fileName));
+	    // For each pet in the arrayList
+	    for (Pet pet : list) {
+	    	// Write a line to the file containing the pet name and age separated by a whitespace
+	        fileWriter.println(pet.getName() + " " + pet.getAge());
+	    }
+	    // Close the printWriter
+	    fileWriter.close();
 	}
 
 }
